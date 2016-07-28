@@ -65,4 +65,13 @@ Graph.prototype.forEachNode = function(cb) {
 
 /*
  * Complexity: What is the time complexity of the above functions?
+  AddNode(): O(1)
+  contains(): O(n)
+  removeNode(): O(n)
+  findNode(): O(n)
+  If hasEdge and addEdge didn't use findNode, they would have constant time.
+  hasEdge(): O(n)
+  addEdge(): O(n)
+  forEachNode(): O(n)
+
  */
