@@ -52,6 +52,15 @@ HashTable.prototype.resize = function() {
 
 /*
  * Complexity: What is the time complexity of the above functions?
+  Each one of the functions below is multiplied
+  by the time complexity of the hashFunction. Thus, all constant functions have O(n),
+  and all quadratic functions become cubic.
+
+  insert(): Best Case(Not resized): Constant, Worst Case(Resized): O(n^2)
+  retrieve(): O(1)
+  remove():Best Case(Not resized): Constant, Worst Case(Resized): O(n^2)
+  resize: O(n^2)
+
  */
 
 
