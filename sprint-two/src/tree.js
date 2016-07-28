@@ -32,7 +32,7 @@ treeMethods.find = function(node, target) {
       result = true;
     } else {
       if (!result) {
-        result = treeMethods.find(child, target) ? true : false;
+        result = treeMethods.find(child, target);
       }
     }
   });

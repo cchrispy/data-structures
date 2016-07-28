@@ -5,8 +5,6 @@ var Graph = function() {
   this.nodes = [];
 };
 
-
-
 // Add a node to the graph, passing in the node's value.
 Graph.prototype.addNode = function(node) {
   this.nodes.push({value: node, refs: []});
@@ -60,7 +58,7 @@ Graph.prototype.findNode = function(value) {
 // Pass in a callback which will be executed on each node of the graph.
 Graph.prototype.forEachNode = function(cb) {
   this.nodes.forEach(function(node) {
-    cb(node);
+    cb(node.value);
   });
 };
 
