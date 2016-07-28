@@ -62,4 +62,5 @@ each(): O(n)
 Constant
 get(): O(1)
 set(): O(1)
+checkLimit(): O(1)
  */
