@@ -42,4 +42,7 @@ treeMethods.find = function(node, target) {
 
 /*
  * Complexity: What is the time complexity of the above functions?
+ AddChild() = O(1)
+ Find(): O(n)
+ contains(): O(n)
  */
