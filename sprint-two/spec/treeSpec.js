@@ -45,7 +45,7 @@ describe('tree', function() {
     tree.addChild(6);
     tree.children[0].addChild(7);
     tree.children[0].addChild(8);
-    console.log(tree.children[0].removeFromParent());
+    tree.children[0].removeFromParent();
     expect(tree.contains(7)).to.equal(false);
     expect(tree.contains(8)).to.equal(false);
     expect(tree.contains(6)).to.equal(true);

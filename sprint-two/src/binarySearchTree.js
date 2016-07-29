@@ -16,18 +16,23 @@ var BinarySearchTreeMethods = {
   insert: function(input) {
     var newChild = BinarySearchTree(input);
     newChild.depth = this.depth + 1;
-    this.maxDepth = (this.maxDepth > newChild.depth ? this.maxDepth : newChild.depth);
     if (this.value < input) {
       if (this.right === undefined) {
+        newChild.maxDepth = newChild.depth;
         this.right = newChild;
+        if (this.maxDepth < this.right.maxDepth) { this.maxDepth = this.right.maxDepth; }
       } else {
         this.right.insert(input);
+        if (this.maxDepth < this.right.maxDepth) { this.maxDepth = this.right.maxDepth; }
       }
     } else if (this.value > input) {
       if (this.left === undefined) {
+        newChild.maxDepth = newChild.depth;
         this.left = newChild;
+        if (this.maxDepth < this.left.maxDepth) { this.maxDepth = this.left.maxDepth; }
       } else {
         this.left.insert(input);
+        if (this.maxDepth < this.left.maxDepth) { this.maxDepth = this.left.maxDepth; }
       }
     }
   },
@@ -48,28 +53,63 @@ var BinarySearchTreeMethods = {
   },
   depthFirstLog: function(callback) {
     callback(this.value);
-    if (this.right !== undefined) {
-      this.right.depthFirstLog(callback);
-    }
     if (this.left !== undefined) {
       this.left.depthFirstLog(callback);
     }
+    if (this.right !== undefined) {
+      this.right.depthFirstLog(callback);
+    }
+  },
+  everyNode: function(callback) {
+    callback(this);
+    if (this.left !== undefined) {
+      this.left.everyNode(callback);
+    }
+    if (this.right !== undefined) {
+      this.right.everyNode(callback);
+    }
   },
   breadthFirstLog: function(callback) {
+    console.log("maxDepth", this.maxDepth);
     var layers = {};
-    for (var i = 0; i < this.maxDepth; i++) {
+    for (var i = 0; i <= this.maxDepth; i++) {
       layers[i] = [];
     }
-    depthFirstLog(function(node) {
-      layers[node.depth].push(node);
+    this.everyNode(function(node) {
+      console.log(node.depth);
+      layers[node.depth].push(node.value);
+      console.log('depth: ', node.depth, 'maxdepth :', node.maxDepth);
     });
     _.each(layers, function(depthArray) {
-      depthArray.each(function(node) {
-        callback(node.value);
+      _.each(depthArray, function(node) {
+        callback(node);
       });
     });
-  }  
-
+  },
+  rebalance: function() {
+    var nodeVals = [];
+    this.depthFirstLog(function(value) {
+      nodeVals.push(value);
+    });
+    nodeVals.sort(function(a, b) { return a - b; });
+    var middle = Math.floor(nodeVals.length / 2);
+    var newTree = BinarySearchTree(nodeVals[middle]);
+    var addTree = function(ValuesToAdd) {
+      if (ValuesToAdd.length > 0) {
+        middle = Math.floor(ValuesToAdd.length / 2);
+        var leftVals = ValuesToAdd.splice(0, middle);
+        var rightVals = ValuesToAdd.slice(1);
+        var leftMiddle = Math.floor(leftVals.length / 2);
+        var rightMiddle = Math.floor(rightVals.length / 2);
+        newTree.insert(leftVals[leftMiddle]);
+        newTree.insert(rightVals[rightMiddle]);
+        addTree(leftVals);
+        addTree(rightVals);
+      }
+    };
+    addTree(nodeVals);
+    return newTree;
+  } 
 };
 
 /*
