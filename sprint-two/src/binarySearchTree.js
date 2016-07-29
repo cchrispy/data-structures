@@ -70,15 +70,12 @@ var BinarySearchTreeMethods = {
     }
   },
   breadthFirstLog: function(callback) {
-    console.log("maxDepth", this.maxDepth);
     var layers = {};
     for (var i = 0; i <= this.maxDepth; i++) {
       layers[i] = [];
     }
     this.everyNode(function(node) {
-      console.log(node.depth);
       layers[node.depth].push(node.value);
-      console.log('depth: ', node.depth, 'maxdepth :', node.maxDepth);
     });
     _.each(layers, function(depthArray) {
       _.each(depthArray, function(node) {
