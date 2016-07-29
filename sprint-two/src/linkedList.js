@@ -3,21 +3,16 @@ var LinkedList = function() {
   list.head = null;
   list.tail = null;
 
-  list.iterate = function(node, target) {
-    if (node.next === null) {
-      node.next = target;
-    } else {
-      this.iterate(node.next);
-    }
-  };
-  
-
   list.addToTail = function(value) {
-    this.tail = Node(value);
+    var newNode = Node(value);
     if (this.head === null) {
-      this.head = Node(value);
+      this.head = newNode;
+    }
+    if (this.tail !== null) {
+      this.tail.next = newNode;
+      this.tail = newNode;
     } else {
-      this.iterate(this.head, Node(value));
+      this.tail = newNode;
     }
   };
 
@@ -57,8 +52,7 @@ var Node = function(value) {
 
 /*
  * Complexity: What is the time complexity of the above functions?
- iterate(): O(n)
- addToTail(): O(n)
+ addToTail(): O(1)
  removeHead(): O(1)
  contains(): O(n)
  find(): O(n)
