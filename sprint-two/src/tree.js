@@ -1,24 +1,17 @@
 var Tree = function(value) {
   var newTree = {};
   newTree.value = value;
-
-  // your code here
-
+  newTree.parent = null;
   newTree.children = [];
-
-  // newTree.children = null;  // fix me
-
   return _.extend(newTree, treeMethods);
 };
 
 var treeMethods = {};
 
 treeMethods.addChild = function(value) {
-  // your code here
-  this.children.push(Tree(value));
-
-
-  // newTree.children = null;  // fix me
+  var newTree = Tree(value);
+  newTree.parent = this;
+  this.children.push(newTree);
 };
 
 treeMethods.contains = function(target) {
@@ -39,10 +32,17 @@ treeMethods.find = function(node, target) {
   return result;
 };
 
+treeMethods.removeFromParent = function() {
+  this.parent.children.splice(this.parent.children.indexOf(this), 1);
+  this.parent = null;
+  return this;
+};
+
 
 /*
  * Complexity: What is the time complexity of the above functions?
  AddChild() = O(1)
  Find(): O(n)
  contains(): O(n)
+ removeFromParent: O(n)
  */
