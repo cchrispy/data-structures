@@ -50,4 +50,19 @@ describe('tree', function() {
     expect(tree.contains(8)).to.equal(false);
     expect(tree.contains(6)).to.equal(true);
   });
+  it('should correctly iterate using traverse', function() {
+    var result = [];
+    var callback = function(obj) { result.push(obj); };
+    tree.addChild(5);
+    tree.addChild(6);
+    tree.children[0].addChild(7);
+    tree.children[0].addChild(8);
+    tree.addChild(17);
+    tree.addChild(32);
+    tree.children[2].addChild(11);
+    tree.children[1].addChild(13);
+    tree.children[1].children[0].addChild(42);
+    tree.traverse(callback);
+    expect(result.includes(32)).to.equal(true);
+  });
 });

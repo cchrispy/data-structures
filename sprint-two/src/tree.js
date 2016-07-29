@@ -38,6 +38,15 @@ treeMethods.removeFromParent = function() {
   return this;
 };
 
+treeMethods.traverse = function(cb) {
+  cb(this.value);
+  if (this.children.length) {
+    this.children.forEach(function (child) {
+      child.traverse(cb);
+    });
+  }
+};
+
 
 /*
  * Complexity: What is the time complexity of the above functions?
@@ -45,4 +54,5 @@ treeMethods.removeFromParent = function() {
  Find(): O(n)
  contains(): O(n)
  removeFromParent: O(n)
+ traverse: O(n) reliant on the time complexity of the call back
  */
