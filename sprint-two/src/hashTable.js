@@ -8,13 +8,18 @@ var HashTable = function() {
 
 HashTable.prototype.insert = function(k, v) {
   var index = getIndexBelowMaxForKey(k, this._limit);
-  var obj = {};
-  obj[k] = v;
-  if (this._storage.get(index) === undefined) {
-    this._counter ++;
+  var tuple = [];
+  tuple[0] = k;
+  tuple[1] = v;
+  this._counter ++;
+  if (this.retrieve(k)) {
+    this.remove(k);  
   }
-  this._storage.set(index, _.extend({}, this._storage.get(index), obj));
-  if (this._counter === this._limit - 4) {
+  if (this._storage.get(index) === undefined) {
+    this._storage.set(index, []);
+  }
+  this._storage.get(index).push(tuple);
+  if (this._counter >= this._limit * 0.75) {
     this._limit = this._limit << 1;
     this.resize();
   }
@@ -22,7 +27,13 @@ HashTable.prototype.insert = function(k, v) {
 
 HashTable.prototype.retrieve = function(k) {
   var index = getIndexBelowMaxForKey(k, this._limit);
-  return this._storage.get(index)[k];
+  var bucket = this._storage.get(index);
+  if (bucket) {
+    var tuple = bucket.find(function(tuple) {
+      return tuple[0] === k;
+    });
+    return tuple ? tuple[1] : undefined;
+  }
 };
 
 HashTable.prototype.remove = function(k) {
@@ -30,8 +41,10 @@ HashTable.prototype.remove = function(k) {
   if (this.retrieve(k)) {
     this._counter --;
   }
-  this._storage.set(index, _.omit(this._storage.get(index), k));
-  if (this._counter === this._limit >> 1) {
+  this._storage.get(index).splice(this._storage.get(index).findIndex(function(tuple) {
+    return tuple[0] === k;
+  }), 1);
+  if (this._counter < this._limit * 0.25) {
     this._limit = this._limit >> 1;
     this.resize();
   }
@@ -40,12 +53,14 @@ HashTable.prototype.resize = function() {
   var oldStorage = _.clone(this._storage);
   var insert = this.insert.bind(this);
   this._storage = LimitedArray(this._limit);
-  oldStorage.each(function(item) {
-    _.each(item, function(value, key) {
-      insert(key, value);
-    });
+  this._counter = 0;
+  oldStorage.each(function(tupleSets) {
+    if (tupleSets) {
+      tupleSets.forEach(function(tuple) {
+        insert(tuple[0], tuple[1]);
+      });
+    }
   });
- 
 };
   
 
@@ -56,10 +71,10 @@ HashTable.prototype.resize = function() {
   by the time complexity of the hashFunction. Thus, all constant functions have O(n),
   and all quadratic functions become cubic.
 
-  insert(): Best Case(Not resized): Constant, Worst Case(Resized): O(n^2)
+  insert(): O(1)
   retrieve(): O(1)
-  remove():Best Case(Not resized): Constant, Worst Case(Resized): O(n^2)
-  resize: O(n^2)
+  remove(): O(1)
+  resize: O(n)
 
  */
 
