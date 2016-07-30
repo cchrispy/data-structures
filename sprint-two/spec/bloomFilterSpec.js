@@ -33,7 +33,7 @@ describe('bloomFilter', function() {
 
 
   beforeEach(function() {
-    bloomFilter = BloomFilter(18);
+    bloomFilter = BloomFilter(40);
   });
 
   it('should have methods named "insert", "addHash", "query", and "clear', function() {
@@ -64,6 +64,7 @@ describe('bloomFilter', function() {
         counter++;
       }
     }
+    console.log(counter / 10000);
     expect(counter > 0).to.equal(true);
   });
 });
