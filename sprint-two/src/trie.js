@@ -24,8 +24,6 @@ Trie.prototype.insert = function(word) {
   }
 };
 Trie.prototype.predictToDocument =function(document){
-  //var mutableDoc = document.replace(/,/g,'').replace(/./g,'').replace(/:/g,'').replace(/;/g,'');
-  //console.log(mutableDoc);
   var wordsToPredict = document.split(" ");
   wordsToPredict.forEach(function(word){
     this.insert(word.replace(/\W/g, '').toLowerCase());
