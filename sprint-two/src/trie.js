@@ -29,7 +29,7 @@ Trie.prototype.autofill = function(partialWord) {
     return tree.value === partialWord[0];
   }));
   if (partialWord.length === 0) {
-    console.log("test");
+    //In the case where there's no more word to add
     var nextLetter = this.children.reduce(function(highest, next) {
       if (highest.useCounter < next.useCounter) {
         return next;
@@ -37,11 +37,10 @@ Trie.prototype.autofill = function(partialWord) {
       return highest;
     });
     retval += nextLetter.value;
-    nextLetter.autofill(partialWord);
-    if (nextLetter.endChar === true) {
-      console.log("yo");
-      return retval;
+    if (nextLetter.endChar) {
+      return retval+=nextLetter.value;
     }
+    nextLetter.autofill(partialWord);
 
   }
   if (childrenIndex > -1) {
@@ -51,7 +50,7 @@ Trie.prototype.autofill = function(partialWord) {
   }
   if (childrenIndex < 0) {
     //Case where the next letter doesn't already exist in the tree
-    return partialWord;
+    retval += partialWord;
   }
   return retval;
 };
