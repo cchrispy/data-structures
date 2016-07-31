@@ -6,7 +6,6 @@ var Trie = function(letter) {
 };
 
 Trie.prototype.insert = function(word) {
-  word = word.toLowerCase();
   var newTrie = new Trie(word[0]);
   var childrenIndex = (this.children.findIndex(function(tree) {
     return tree.value === word[0];
@@ -24,15 +23,25 @@ Trie.prototype.insert = function(word) {
     this.children.push(newTrie);
   }
 };
+Trie.prototype.predictToDocument =function(document){
+  //var mutableDoc = document.replace(/,/g,'').replace(/./g,'').replace(/:/g,'').replace(/;/g,'');
+  //console.log(mutableDoc);
+  var wordsToPredict = document.split(" ");
+  wordsToPredict.forEach(function(word){
+    this.insert(word.replace(/\W/g, '').toLowerCase());
+  }.bind(this));
+}
 Trie.prototype.autofill = function(partialWord) {
   var retval = '';
   var childrenIndex = (this.children.findIndex(function(tree) {
-    return tree.value === partialWord[0];
+    if(partialWord[0] !== undefined){
+      return tree.value === partialWord[0].toUpperCase() || tree.value === partialWord[0].toLowerCase();
+    }
   }));
 
   //Case where we no longer have any word to add
+  //We're going to start autofilling
   if (partialWord.length === 0) {
-    //In the case where there's no more word to add
     var nextLetter = this.children.reduce(function(highest, next) {
       if (highest.useCounter < next.useCounter) {
         return next;
@@ -59,3 +68,9 @@ Trie.prototype.autofill = function(partialWord) {
   }
   return retval;
 };
+Trie.prototype.clear = function(){
+  this.children = [];
+  this.value = null;
+  this.endChar = false;
+  this.useCounter = 0;
+}
