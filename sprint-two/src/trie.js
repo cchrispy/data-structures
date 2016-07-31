@@ -6,6 +6,7 @@ var Trie = function(letter) {
 };
 
 Trie.prototype.insert = function(word) {
+  word = word.toLowerCase();
   var newTrie = new Trie(word[0]);
   var childrenIndex = (this.children.findIndex(function(tree) {
     return tree.value === word[0];
@@ -28,6 +29,8 @@ Trie.prototype.autofill = function(partialWord) {
   var childrenIndex = (this.children.findIndex(function(tree) {
     return tree.value === partialWord[0];
   }));
+
+  //Case where we no longer have any word to add
   if (partialWord.length === 0) {
     //In the case where there's no more word to add
     var nextLetter = this.children.reduce(function(highest, next) {
@@ -38,16 +41,18 @@ Trie.prototype.autofill = function(partialWord) {
     });
     retval += nextLetter.value;
     if (nextLetter.endChar) {
-      return retval+=nextLetter.value;
+      return retval;
     }
-    nextLetter.autofill(partialWord);
+    retval += nextLetter.autofill(partialWord);
 
   }
+
   if (childrenIndex > -1) {
     //Case where there is a child node that matches the next character;
     retval += partialWord[0];
     retval += this.children[childrenIndex].autofill(partialWord.slice(1));
   }
+
   if (childrenIndex < 0) {
     //Case where the next letter doesn't already exist in the tree
     retval += partialWord;
